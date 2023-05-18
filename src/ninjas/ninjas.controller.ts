@@ -11,6 +11,7 @@ import {
 import { CreateNinjaDto } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
 import { NinjasService } from './ninjas.service';
+import { NotFoundException } from '@nestjs/common';
 
 @Controller('ninjas')
 export class NinjasController {
@@ -25,7 +26,11 @@ export class NinjasController {
   // GET /ninjas/:id --> {...}
   @Get(':id')
   getOneNinja(@Param('id') id: string) {
-    return this.ninjasService.getNinja(+id); // + makes sure type expects a number
+    try {
+      return this.ninjasService.getNinja(+id); // + makes sure type expects a number
+    } catch (err) {
+      throw new NotFoundException();
+    }
   }
 
   // POST /ninjas --> Create ninjas
